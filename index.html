@@ -1,16 +1,22 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>To Do List</title>
+		<title>The Tastiest News</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	</head>
 	<body>
-		<header>The Tastiest News</header>
+		<header class="news__header">The Tastiest News</header>
 		<main class="my-class">
-			<header>News Channels</header>
-			<section id ="newsChannels"></section>
+			<section>
+				<header class="news__channels-header">News Channels</header>
+				<div id ="newsChannels" class="news__channel-list"></div>
+			</section>
+			<section>
+				<header class="news__artclies-header">News</header>
+				<section id="news"></section>
+			</section>
 		</main>
 		<script src= "./bundle.js" ></script>
 	</body>

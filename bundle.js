@@ -71,57 +71,92 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__article__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__news_channel_item__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__create_articles__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_loader__ = __webpack_require__(13);
 
 
 
-const createNewsChannelItem = channelId => {
-  let newsItem = document.createElement('div');
-  newsItem.innerHTML = channelId;
-  newsItem.classList.add('card');
-  return newsItem;
-}
 
-const arrayOfNewsChannels = ['cnn', 'bloomberg', 'bbc-news', 'google-news', 'techcrunch', 'time', 'new-scientist', 'nfl-news', 'national-geographic', 'usa-today'];
 
-let myFunc = () => {
-  const newsContainer = document.querySelector('#newsChannels');
-  arrayOfNewsChannels.forEach(channel => {
-    newsContainer.appendChild(createNewsChannelItem(channel));
-  });
-  const onContainerClick  = (event) => {
-    console.log('clicked');
+
+let currentChannel = 'cnn';
+let loader;
+
+const setCssClass = (currentValue, className) => {
+  let previousItem = document.querySelector(`.${className}`);
+  previousItem.classList.remove(`${className}`);
+  let currentItem = document.querySelector(`#${currentValue}`);
+  currentItem.classList.add(`${className}`);
+};
+
+const onContainerClick  = (event) => {
+  if (event.target === event.currentTarget) {
+    return;
+  }
+  const newsChannelId = event.target.innerHTML;
+  setCssClass(newsChannelId, 'active-channel');
+
+  if (currentChannel !== newsChannelId) {
+    const newsContainer = document.querySelector('#newsChannels');
+    const news = document.querySelector('#news');
+    const newArticlesContainer = document.createElement('div');
+    const currentArticles = document.querySelector('.news-articles');
+
     newsContainer.removeEventListener('click', onContainerClick);
-    const newsChannelId = event.target.innerHTML;
-    fetch(`https://newsapi.org/v1/articles?source=${newsChannelId}&apiKey=104b255245ef41b2a0311bc877694c67`)
-      .then(resp => resp.json())
-      .then(myJson => {
-        console.log(myJson);
-        if (myJson.status === "ok") {
-          let arrayOfPromises = [];
-          let arrayOfArticles = []
-          myJson.articles.forEach(element => {
-            let article = new __WEBPACK_IMPORTED_MODULE_1__article__["a" /* Article */](element);
-            arrayOfPromises = [...arrayOfPromises, article.createArticleComponent()];
-            arrayOfArticles.push(article.component);
+    news.removeChild(currentArticles);
+    newArticlesContainer.classList.add('news-articles');
+  
+    currentChannel = newsChannelId;
+    news.appendChild(newArticlesContainer);
+    loader.showLoader();
+    Object(__WEBPACK_IMPORTED_MODULE_3__create_articles__["a" /* createArtciles */])(newsChannelId)
+      .then(data => {
+        Promise.all(data.arrayOfPromises).then(() => {
+          data.arrayOfArticles.forEach(element => {
+          newArticlesContainer.appendChild(element);
           });
-          Promise.all(arrayOfPromises).then(() => {
-            console.log('all images are loaded');
-            arrayOfArticles.forEach(element => {
-              newsContainer.appendChild(element);
-              newsContainer.addEventListener('click', onContainerClick);
-            });
-          })
-        }
+          loader.hideLoader();
+          newsContainer.addEventListener('click', onContainerClick);
+        })
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         newsContainer.addEventListener('click', onContainerClick);
       });
-  };
-  newsContainer.addEventListener('click', onContainerClick);
+  }
 };
 
+let myFunc = () => {
+  const newsContainer = document.querySelector('#newsChannels');
+  const news = document.querySelector('#news');
+  const newsArticlesContainer = document.createElement('div');
+
+  loader = new __WEBPACK_IMPORTED_MODULE_4__components_loader__["a" /* Loader */](news);
+  loader.createLoader();
+
+  newsArticlesContainer.classList.add('news-articles');
+  news.appendChild(newsArticlesContainer);
+  loader.showLoader();
+  Object(__WEBPACK_IMPORTED_MODULE_3__create_articles__["a" /* createArtciles */])(currentChannel).then(data => {
+    Promise.all(data.arrayOfPromises)
+    .then(() => {
+      data.arrayOfArticles.forEach(element => {
+      newsArticlesContainer.appendChild(element);
+      });
+      loader.hideLoader();
+    })
+    .catch(err => console.log(err));
+  })
+  .then(() => {
+    newsContainer.addEventListener('click', onContainerClick);
+  });
+
+  __WEBPACK_IMPORTED_MODULE_2__constants__["b" /* arrayOfNewsChannels */].forEach(channel => {
+    newsContainer.appendChild(Object(__WEBPACK_IMPORTED_MODULE_1__news_channel_item__["a" /* createNewsChannelItem */])(channel, currentChannel));
+  });
+};
 
 document.addEventListener('load', myFunc());
 
@@ -185,7 +220,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, ".my-class {\r\n  max-width: 500px;\r\n  margin: 0 auto;\r\n}\r\n img {\r\n   width: 400px !important;\r\n   height: auto !important;\r\n }\r\n\r\n section {\r\n   width: 400px !important; \r\n }", ""]);
+exports.push([module.i, "html, body {\r\n  font-size: 10px;\r\n}\r\n\r\n.my-class {\r\n  display: grid;\r\n  grid-template-columns: 2fr 7fr;\r\n  width: 100%;\r\n  margin: 0 auto;\r\n}\r\n\r\n.news__header {\r\n  text-align: center;\r\n  font-size: 4.5rem;\r\n}\r\n\r\n.news__channel-list {\r\n  margin-top: 2px;\r\n}\r\n\r\n.news__channels-header, .news__artclies-header {\r\n  font-size: 1.5rem;\r\n  height: 2rem;\r\n  margin-bottom: 1rem;\r\n  text-align: center;\r\n}\r\n\r\n.news__artclies-header {\r\n  text-align: center;\r\n}\r\n\r\n img {\r\n   width: 100% !important;\r\n   height: auto !important;\r\n }\r\n\r\n section {\r\n   margin: 2px;\r\n }\r\n\r\n.news-articles {\r\n  display: grid;\r\n  grid-template-columns: 1fr 1fr;\r\n}\r\n\r\n.news-channel {\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: center;\r\n  margin-bottom: 1rem;\r\n  vertical-align: middle;\r\n  padding: 1rem 1rem;\r\n  cursor: pointer;\r\n}\r\n\r\n.loader {\r\n  position: relative;\r\n  height: 5rem;\r\n}\r\n\r\n.circle-loader {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 45%;\r\n  border: 6px solid transparent;\r\n  border-top-color: #b8b9a;\r\n  width: 90px;\r\n  height: 90px;\r\n  box-sizing: border-box;\r\n  border-radius: 50%;\r\n  animation: loader-animation 1s linear infinite;\r\n}\r\n\r\n.active-channel {\r\n  background: #d8d9da;\r\n}\r\n\r\n.loader-icon {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  font-size: 18px;\r\n  color: #d8d9da;\r\n  transform: translate(-50%, -50%);\r\n}\r\n\r\n@keyframes loader-animation {\r\n  0% {\r\n      transform: rotate(0deg);\r\n  }\r\n  100% {\r\n      transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n@media (min-width:650px) {\r\n  html, body {\r\n    font-size: 13px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 96%;\r\n  }\r\n}\r\n\r\n@media (min-width:1025px) {\r\n  html, body {\r\n    font-size: 15px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 90%;\r\n  }\r\n}\r\n\r\n@media (min-width:1281px) {\r\n  html, body {\r\n    font-size: 17px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 65%;\r\n  }\r\n}\r\n", ""]);
 
 // exports
 
@@ -775,72 +810,37 @@ module.exports = function (css) {
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// Unique ID creation requires a high quality random # generator.  In the
-// browser this is a little complicated due to unknown quality of Math.random()
-// and inconsistent support for the `crypto` API.  We do the best we can via
-// feature-detection
-
-// getRandomValues needs to be invoked in a context where "this" is a Crypto
-// implementation. Also, find the complete implementation of crypto on IE11.
-var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
-                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
-
-if (getRandomValues) {
-  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
-
-  module.exports = function whatwgRNG() {
-    getRandomValues(rnds8);
-    return rnds8;
-  };
-} else {
-  // Math.random()-based (RNG)
-  //
-  // If all else fails, use Math.random().  It's fast, but is of unspecified
-  // quality.
-  var rnds = new Array(16);
-
-  module.exports = function mathRNG() {
-    for (var i = 0, r; i < 16; i++) {
-      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
-      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
-    }
-
-    return rnds;
-  };
+"use strict";
+const createNewsChannelItem = (channelId, currentChannel) => {
+  let newsItem = document.createElement('div');
+  newsItem.innerHTML = channelId;
+  newsItem.classList.add('card');
+  newsItem.classList.add('news-channel');
+  newsItem.setAttribute('id', channelId);
+  if (channelId === currentChannel) {
+    newsItem.classList.add('active-channel')
+  }
+  return newsItem;
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = createNewsChannelItem;
+
 
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
+"use strict";
+const apiKey = '104b255245ef41b2a0311bc877694c67';
+/* harmony export (immutable) */ __webpack_exports__["a"] = apiKey;
 
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return ([bth[buf[i++]], bth[buf[i++]], 
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]]]).join('');
-}
 
-module.exports = bytesToUuid;
+const arrayOfNewsChannels = ['cnn', 'bloomberg', 'bbc-news', 'google-news', 'techcrunch', 'time', 'new-scientist', 'nfl-news', 'national-geographic', 'usa-today'];
+/* harmony export (immutable) */ __webpack_exports__["b"] = arrayOfNewsChannels;
+
+
 
 
 /***/ }),
@@ -848,41 +848,94 @@ module.exports = bytesToUuid;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_uuid__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_uuid___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_uuid__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_path__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_path__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fetch_service__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_article__ = __webpack_require__(12);
 
 
 
+
+const fetchService = new __WEBPACK_IMPORTED_MODULE_0__fetch_service__["a" /* FetchService */];
+
+const createArtciles = (newsChannelId) => {
+  return fetchService.fetchDataFromServer(newsChannelId, __WEBPACK_IMPORTED_MODULE_1__constants__["a" /* apiKey */]).then(data => {
+    let arrayOfPromises = [];
+    let arrayOfArticles = [];
+    data.forEach(element => {
+      let articles = new __WEBPACK_IMPORTED_MODULE_2__components_article__["a" /* Article */](element);
+      arrayOfPromises = [...arrayOfPromises, articles.createArticleComponent()];
+      arrayOfArticles.push(articles.component);
+    });
+    return {
+      arrayOfPromises: arrayOfPromises,
+      arrayOfArticles: arrayOfArticles
+    }
+  })
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = createArtciles;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class FetchService {
+  constructor() {}
+
+  fetchDataFromServer(newsChannelId, key) {
+    return fetch(`https://newsapi.org/v1/articles?source=${newsChannelId}&apiKey=${key}`)
+      .then(resp => resp.json())
+      .then(data => {
+        return data.articles || [];
+      });
+  }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = FetchService;
+
+
+
+/***/ }),
+/* 10 */,
+/* 11 */,
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 class Article {
   constructor({description, publishedAt, title, url, urlToImage}) {
-    this.id = 123;
-    this.description = description;
-    this.publishedAt = publishedAt;
-    this.title = title;
-    this.url = url;
+    this.description = description || 'follow the link to find out more';
+    this.publishedAt = publishedAt || '';
+    this.title = title || '';
+    this.url = url || '';
     this.urlToImage = urlToImage;
     this.component = null;
   }
 
   createArticleComponent() {
     const articleComponent = document.createElement('section');
-    articleComponent.innerHTML = `
-      <img src="${this.urlToImage}" class="card-img-top"></img>
+    const image = document.createElement('img');
+    const content = document.createElement('div');
+    articleComponent.classList.add('card');
+    image.setAttribute('src', this.urlToImage);
+    content.innerHTML = `
       <div class="card-body">
         <h4 class="card-title">${this.title}</h4>
+        <time>${this.publishedAt}</time>
+        <p class="card-text">${this.description}</p>
+        <a href="${this.url}" class="btn btn-primary" target="_blank">read more...</a>
       </div>
     `;
-    const image = document.createElement('img');
-    image.setAttribute('src', this.urlToImage);
+    articleComponent.appendChild(image);
+    articleComponent.appendChild(content);
     this.component = articleComponent;
-    return new Promise((resolve) => {
-      image.addEventListener('load', () => {
-        resolve();
-        console.log('loaded');
+    if (this.urlToImage) {
+      return new Promise((resolve) => {
+        image.addEventListener('load', () => {
+          resolve();
+        });
       });
-    });
+    }
   }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Article;
@@ -890,588 +943,35 @@ class Article {
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var v1 = __webpack_require__(10);
-var v4 = __webpack_require__(11);
-
-var uuid = v4;
-uuid.v1 = v1;
-uuid.v4 = v4;
-
-module.exports = uuid;
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var rng = __webpack_require__(6);
-var bytesToUuid = __webpack_require__(7);
-
-// **`v1()` - Generate time-based UUID**
-//
-// Inspired by https://github.com/LiosK/UUID.js
-// and http://docs.python.org/library/uuid.html
-
-var _nodeId;
-var _clockseq;
-
-// Previous uuid creation time
-var _lastMSecs = 0;
-var _lastNSecs = 0;
-
-// See https://github.com/broofa/node-uuid for API details
-function v1(options, buf, offset) {
-  var i = buf && offset || 0;
-  var b = buf || [];
-
-  options = options || {};
-  var node = options.node || _nodeId;
-  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
-
-  // node and clockseq need to be initialized to random values if they're not
-  // specified.  We do this lazily to minimize issues related to insufficient
-  // system entropy.  See #189
-  if (node == null || clockseq == null) {
-    var seedBytes = rng();
-    if (node == null) {
-      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
-      node = _nodeId = [
-        seedBytes[0] | 0x01,
-        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]
-      ];
-    }
-    if (clockseq == null) {
-      // Per 4.2.2, randomize (14 bit) clockseq
-      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
-    }
-  }
-
-  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
-  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
-  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
-  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
-  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
-
-  // Per 4.2.1.2, use count of uuid's generated during the current clock
-  // cycle to simulate higher resolution clock
-  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
-
-  // Time since last uuid creation (in msecs)
-  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
-
-  // Per 4.2.1.2, Bump clockseq on clock regression
-  if (dt < 0 && options.clockseq === undefined) {
-    clockseq = clockseq + 1 & 0x3fff;
-  }
-
-  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
-  // time interval
-  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
-    nsecs = 0;
-  }
-
-  // Per 4.2.1.2 Throw error if too many uuids are requested
-  if (nsecs >= 10000) {
-    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
-  }
-
-  _lastMSecs = msecs;
-  _lastNSecs = nsecs;
-  _clockseq = clockseq;
-
-  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
-  msecs += 12219292800000;
-
-  // `time_low`
-  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
-  b[i++] = tl >>> 24 & 0xff;
-  b[i++] = tl >>> 16 & 0xff;
-  b[i++] = tl >>> 8 & 0xff;
-  b[i++] = tl & 0xff;
-
-  // `time_mid`
-  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
-  b[i++] = tmh >>> 8 & 0xff;
-  b[i++] = tmh & 0xff;
-
-  // `time_high_and_version`
-  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
-  b[i++] = tmh >>> 16 & 0xff;
-
-  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
-  b[i++] = clockseq >>> 8 | 0x80;
-
-  // `clock_seq_low`
-  b[i++] = clockseq & 0xff;
-
-  // `node`
-  for (var n = 0; n < 6; ++n) {
-    b[i + n] = node[n];
-  }
-
-  return buf ? buf : bytesToUuid(b);
-}
-
-module.exports = v1;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var rng = __webpack_require__(6);
-var bytesToUuid = __webpack_require__(7);
-
-function v4(options, buf, offset) {
-  var i = buf && offset || 0;
-
-  if (typeof(options) == 'string') {
-    buf = options === 'binary' ? new Array(16) : null;
-    options = null;
-  }
-  options = options || {};
-
-  var rnds = options.random || (options.rng || rng)();
-
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = (rnds[6] & 0x0f) | 0x40;
-  rnds[8] = (rnds[8] & 0x3f) | 0x80;
-
-  // Copy bytes to buffer, if provided
-  if (buf) {
-    for (var ii = 0; ii < 16; ++ii) {
-      buf[i + ii] = rnds[ii];
-    }
-  }
-
-  return buf || bytesToUuid(rnds);
-}
-
-module.exports = v4;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// Split a filename into [root, dir, basename, ext], unix version
-// 'root' is just a slash, or nothing.
-var splitPathRe =
-    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-var splitPath = function(filename) {
-  return splitPathRe.exec(filename).slice(1);
-};
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function(path) {
-  var result = splitPath(path),
-      root = result[0],
-      dir = result[1];
-
-  if (!root && !dir) {
-    // No dirname whatsoever
-    return '.';
-  }
-
-  if (dir) {
-    // It has a dirname, strip trailing slash
-    dir = dir.substr(0, dir.length - 1);
-  }
-
-  return root + dir;
-};
-
-
-exports.basename = function(path, ext) {
-  var f = splitPath(path)[2];
-  // TODO: make this comparison case-insensitive on windows?
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-
-exports.extname = function(path) {
-  return splitPath(path)[3];
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
-
-/***/ }),
 /* 13 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// shim for using process in browser
-var process = module.exports = {};
+"use strict";
+class Loader {
+  constructor(parentElement) {
+    this.parentElement = parentElement;
+    this.loader = null;
+  }
 
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
+  createLoader() {
+    const loader = document.createElement('div');
+    loader.classList.add('loader');
+    loader.innerHTML = `
+      <div class="circle-loader"></div>`;
+      this.loader = loader;
+  }
 
-var cachedSetTimeout;
-var cachedClearTimeout;
+  showLoader() {
+    this.parentElement.appendChild(this.loader);
+  }
 
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
+  hideLoader() {
+    let loader = document.querySelector('.loader');
+    this.parentElement.removeChild(loader);
+  }
 }
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
+/* harmony export (immutable) */ __webpack_exports__["a"] = Loader;
 
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
 
 
 /***/ })
