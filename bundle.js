@@ -962,7 +962,6 @@ class Loader {
   }
 
   showLoader() {
-    console.log('loader')
     this.parentElement.appendChild(this.loader);
   }
 
