@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,13 +68,28 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+const apiKey = '104b255245ef41b2a0311bc877694c67';
+/* harmony export (immutable) */ __webpack_exports__["a"] = apiKey;
+
+
+const arrayOfNewsChannels = ['cnn', 'bloomberg', 'bbc-news', 'google-news', 'techcrunch', 'time', 'new-scientist', 'nfl-news', 'national-geographic', 'usa-today'];
+/* harmony export (immutable) */ __webpack_exports__["b"] = arrayOfNewsChannels;
+
+
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__news_channel_item__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__news_channel_item__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__create_articles__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_loader__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_loader__ = __webpack_require__(11);
 
 
 
@@ -162,11 +177,11 @@ document.addEventListener('load', myFunc());
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(2);
+var content = __webpack_require__(3);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -180,7 +195,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(5)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -212,10 +227,10 @@ if(false) {
 }
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(false);
+exports = module.exports = __webpack_require__(4)(false);
 // imports
 
 
@@ -226,7 +241,7 @@ exports.push([module.i, "html, body {\r\n  font-size: 10px;\r\n}\r\n\r\n.my-clas
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 /*
@@ -308,7 +323,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -377,7 +392,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(5);
+var	fixUrls = __webpack_require__(6);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -714,7 +729,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 
@@ -809,7 +824,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -829,28 +844,13 @@ const createNewsChannelItem = (channelId, currentChannel) => {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const apiKey = '104b255245ef41b2a0311bc877694c67';
-/* harmony export (immutable) */ __webpack_exports__["a"] = apiKey;
-
-
-const arrayOfNewsChannels = ['cnn', 'bloomberg', 'bbc-news', 'google-news', 'techcrunch', 'time', 'new-scientist', 'nfl-news', 'national-geographic', 'usa-today'];
-/* harmony export (immutable) */ __webpack_exports__["b"] = arrayOfNewsChannels;
-
-
-
-
-/***/ }),
 /* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fetch_service__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_article__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_article__ = __webpack_require__(10);
 
 
 
@@ -896,9 +896,7 @@ class FetchService {
 
 
 /***/ }),
-/* 10 */,
-/* 11 */,
-/* 12 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -943,7 +941,7 @@ class Article {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
