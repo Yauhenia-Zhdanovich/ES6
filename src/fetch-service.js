@@ -13,3 +13,11 @@ export class FetchService {
       });
   }
 }
+// {
+//   "presets" : ["es2015", "react"],
+// "plugins": [
+//       "transform-object-rest-spread",
+//       "@babel/plugin-proposal-object-rest-spread",
+//       "transform-runtime"
+//   ]
+// }

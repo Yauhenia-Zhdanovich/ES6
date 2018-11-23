@@ -1,6 +1,6 @@
-export const createNewsChannelItem = (channelId, currentChannel) => {
+export const createNewsChannelItem = (channelName,channelId, currentChannel) => {
   let newsItem = document.createElement('div');
-  newsItem.innerHTML = channelId;
+  newsItem.innerHTML = channelName;
   newsItem.classList.add('card');
   newsItem.classList.add('news-channel');
   newsItem.setAttribute('id', channelId);

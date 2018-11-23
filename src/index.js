@@ -1,6 +1,6 @@
 import './style.css';
 import { createNewsChannelItem } from "./news-channel-item";
-import { arrayOfNewsChannels } from './constants';
+import { newsChannels1 } from './constants';
 import { createArtciles } from './create-articles';
 import { Loader } from "./components/loader";
 
@@ -14,20 +14,20 @@ const setCssClass = (currentValue, className) => {
   currentItem.classList.add(`${className}`);
 };
 
-const getDomNodes = (stringSelectors) => {
-
-};
-const wrapper = (newsChannel, articlesContainer, newsContainer) => {
+const getArticles = (newsChannel, articlesContainer, newsContainer) => {
   return createArtciles(newsChannel)
     .then(data => {
-    Promise.all(data.arrayOfPromises)
-    .then(() => {
-      data.arrayOfArticles.forEach(element => {
-        articlesContainer.appendChild(element);
+    return Promise.all(data.arrayOfPromises)
+      .then(() => {
+        data.arrayOfArticles.forEach(element => {
+          articlesContainer.appendChild(element);
+        });
+        loader.hideLoader();
+      })
+      .catch(err => {
+        console.log(err);
+        newsContainer.addEventListener('click', onContainerClick);
       });
-      loader.hideLoader();
-    })
-    .catch(err => console.log(err));
   })
 };
 
@@ -35,18 +35,15 @@ const onContainerClick  = (event) => {
   if (event.target === event.currentTarget) {
     return;
   }
-  const newsChannelId = event.target.innerHTML;
+  const newsChannelId = event.target.id;
   setCssClass(newsChannelId, 'active-channel');
 
   if (currentChannel !== newsChannelId) {
-    //===========>>>>>>>>>
     const newsContainer = document.querySelector('#newsChannels');
     const news = document.querySelector('#news');
-    const newArticlesContainer = document.createElement('div');
-    //===========>>>>>>>>>
-
     const currentArticles = document.querySelector('.news-articles');
 
+    const newArticlesContainer = document.createElement('div');
 
     newsContainer.removeEventListener('click', onContainerClick);
     news.removeChild(currentArticles);
@@ -55,61 +52,27 @@ const onContainerClick  = (event) => {
     newArticlesContainer.classList.add('news-articles');
     news.appendChild(newArticlesContainer);
     loader.showLoader();
-    createArtciles(newsChannelId)
-      .then(data => {
-        Promise.all(data.arrayOfPromises).then(() => {
-          data.arrayOfArticles.forEach(element => {
-          newArticlesContainer.appendChild(element);
-          });
-          loader.hideLoader();
-          newsContainer.addEventListener('click', onContainerClick);
-        })
-      })
-      .catch(err => {
-        console.log(err);
-        newsContainer.addEventListener('click', onContainerClick);
-      });
-      //===========>>>>>>>>>
+    getArticles(currentChannel, newArticlesContainer, newsContainer)
+      .then(() => newsContainer.addEventListener('click', onContainerClick));
   }
 };
 
-let myFunc = () => {
-  //===========>>>>>>>>>
+const main = () => {
   const newsContainer = document.querySelector('#newsChannels');
   const news = document.querySelector('#news');
   const newsArticlesContainer = document.createElement('div');
-  //===========>>>>>>>>>
-
   loader = new Loader(news);
   loader.createLoader();
-
-  //===========>>>>>>>>>
   newsArticlesContainer.classList.add('news-articles');
   news.appendChild(newsArticlesContainer);
-  wrapper(currentChannel, newsArticlesContainer, newsContainer)
+  getArticles(currentChannel, newsArticlesContainer, newsContainer)
     .then(() => {
       newsContainer.addEventListener('click', onContainerClick);
     });
   loader.showLoader();
-  // createArtciles(currentChannel)
-  //   .then(data => {
-  //   Promise.all(data.arrayOfPromises)
-  //   .then(() => {
-  //     data.arrayOfArticles.forEach(element => {
-  //     newsArticlesContainer.appendChild(element);
-  //     });
-  //     loader.hideLoader();
-  //   })
-  //   .catch(err => console.log(err));
-  // })
-  // .then(() => {
-  //   newsContainer.addEventListener('click', onContainerClick);
-  // });
-  //===========>>>>>>>>>
-
-  arrayOfNewsChannels.forEach(channel => {
-    newsContainer.appendChild(createNewsChannelItem(channel, currentChannel));
+  Object.entries(newsChannels1).forEach((channel) => {
+    newsContainer.appendChild(createNewsChannelItem(channel[0], channel[1], currentChannel));
   });
 };
 
-document.addEventListener('load', myFunc());
+document.addEventListener('load', main());
