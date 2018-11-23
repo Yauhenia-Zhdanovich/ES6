@@ -2,6 +2,10 @@ html, body {
   font-size: 10px;
 }
 
+ul {
+  padding: 0;
+}
+
 .news {
   display: grid;
   grid-template-columns: 2fr 7fr;
@@ -29,14 +33,14 @@ html, body {
   text-align: center;
 }
 
- img {
-   width: 100% !important;
-   height: auto !important;
- }
+img {
+  width: 100% !important;
+  height: auto !important;
+}
 
- section {
-   margin: 2px;
- }
+section, aside {
+  margin: 2px;
+}
 
 .news-articles {
   display: grid;
