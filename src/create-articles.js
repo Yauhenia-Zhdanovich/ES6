@@ -4,7 +4,7 @@ import { Article } from './components/article';
 
 const fetchService = new FetchService;
 
-export const createArtciles = (newsChannelId) => {
+export async function createArtciles (newsChannelId) {
   return fetchService.fetchDataFromServer(newsChannelId, apiKey).then(data => {
     let arrayOfPromises = [];
     let arrayOfArticles = [];

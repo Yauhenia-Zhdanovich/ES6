@@ -1,10 +1,17 @@
 export class Article {
-  constructor({description, publishedAt, title, url, urlToImage}) {
+  constructor(
+    {
+      description = 'follow the link to find out more',
+      publishedAt = '',
+      title = '',
+      url = '',
+      urlToImage
+    }) {
     this.description = description || 'follow the link to find out more';
     this.publishedAt = publishedAt || '';
     this.title = title || '';
     this.url = url || '';
-    this.urlToImage = urlToImage;
+    this.urlToImage = urlToImage || '';
     this.component = null;
   }
 
