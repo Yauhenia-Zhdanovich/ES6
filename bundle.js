@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,26 +68,11 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const apiKey = '104b255245ef41b2a0311bc877694c67';
-/* harmony export (immutable) */ __webpack_exports__["a"] = apiKey;
-
-
-const arrayOfNewsChannels = ['cnn', 'bloomberg', 'bbc-news', 'google-news', 'techcrunch', 'time', 'new-scientist', 'nfl-news', 'national-geographic', 'usa-today'];
-/* harmony export (immutable) */ __webpack_exports__["b"] = arrayOfNewsChannels;
-
-
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__style_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__news_channel_item__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constants__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__create_articles__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_loader__ = __webpack_require__(11);
 
@@ -106,74 +91,94 @@ const setCssClass = (currentValue, className) => {
   currentItem.classList.add(`${className}`);
 };
 
+ async function getArticles (newsChannel, articlesContainer, newsContainer) {
+  const articles = await Object(__WEBPACK_IMPORTED_MODULE_3__create_articles__["a" /* createArtciles */])(newsChannel);
+  async function attachArticles(data) {
+    return Promise.all(data.arrayOfPromises)
+          .then(() => {
+            data.arrayOfArticles.forEach(element => {
+              articlesContainer.appendChild(element);
+            });
+            loader.hideLoader();
+          })
+          .catch(err => {
+            console.log(err);
+            newsContainer.addEventListener('click', onContainerClick);
+          });
+  }
+  return await attachArticles(articles);
+};
+ 
 const onContainerClick  = (event) => {
   if (event.target === event.currentTarget) {
     return;
   }
-  const newsChannelId = event.target.innerHTML;
+  const newsChannelId = event.target.id;
   setCssClass(newsChannelId, 'active-channel');
 
   if (currentChannel !== newsChannelId) {
     const newsContainer = document.querySelector('#newsChannels');
     const news = document.querySelector('#news');
-    const newArticlesContainer = document.createElement('div');
     const currentArticles = document.querySelector('.news-articles');
+
+    const newArticlesContainer = document.createElement('div');
 
     newsContainer.removeEventListener('click', onContainerClick);
     news.removeChild(currentArticles);
-    newArticlesContainer.classList.add('news-articles');
-  
     currentChannel = newsChannelId;
+
+    newArticlesContainer.classList.add('news-articles');
     news.appendChild(newArticlesContainer);
     loader.showLoader();
-    Object(__WEBPACK_IMPORTED_MODULE_3__create_articles__["a" /* createArtciles */])(newsChannelId)
-      .then(data => {
-        Promise.all(data.arrayOfPromises).then(() => {
-          data.arrayOfArticles.forEach(element => {
-          newArticlesContainer.appendChild(element);
-          });
-          loader.hideLoader();
-          newsContainer.addEventListener('click', onContainerClick);
-        })
-      })
-      .catch(err => {
-        console.log(err);
-        newsContainer.addEventListener('click', onContainerClick);
-      });
+    getArticles(currentChannel, newArticlesContainer, newsContainer)
+      .then(() => newsContainer.addEventListener('click', onContainerClick));
   }
 };
 
-let myFunc = () => {
+const main = () => {
   const newsContainer = document.querySelector('#newsChannels');
   const news = document.querySelector('#news');
   const newsArticlesContainer = document.createElement('div');
-
   loader = new __WEBPACK_IMPORTED_MODULE_4__components_loader__["a" /* Loader */](news);
   loader.createLoader();
-
   newsArticlesContainer.classList.add('news-articles');
   news.appendChild(newsArticlesContainer);
-  loader.showLoader();
-  Object(__WEBPACK_IMPORTED_MODULE_3__create_articles__["a" /* createArtciles */])(currentChannel).then(data => {
-    Promise.all(data.arrayOfPromises)
+  getArticles(currentChannel, newsArticlesContainer, newsContainer)
     .then(() => {
-      data.arrayOfArticles.forEach(element => {
-      newsArticlesContainer.appendChild(element);
-      });
-      loader.hideLoader();
-    })
-    .catch(err => console.log(err));
-  })
-  .then(() => {
-    newsContainer.addEventListener('click', onContainerClick);
-  });
-
-  __WEBPACK_IMPORTED_MODULE_2__constants__["b" /* arrayOfNewsChannels */].forEach(channel => {
-    newsContainer.appendChild(Object(__WEBPACK_IMPORTED_MODULE_1__news_channel_item__["a" /* createNewsChannelItem */])(channel, currentChannel));
+      newsContainer.addEventListener('click', onContainerClick);
+    });
+  loader.showLoader();
+  Object.entries(__WEBPACK_IMPORTED_MODULE_2__constants__["b" /* newsChannels1 */]).forEach((channel) => {
+    newsContainer.appendChild(Object(__WEBPACK_IMPORTED_MODULE_1__news_channel_item__["a" /* createNewsChannelItem */])(channel[0], channel[1], currentChannel));
   });
 };
 
-document.addEventListener('load', myFunc());
+document.addEventListener('load', main());
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const apiKey = '104b255245ef41b2a0311bc877694c67';
+/* harmony export (immutable) */ __webpack_exports__["a"] = apiKey;
+
+
+const newsChannels1 = {
+    'CNN': 'cnn',
+    'Bloomberg': 'bloomberg',
+    "BBC News": 'bbc-news',
+    'Google News': 'google-news',
+    'TechCrunch': 'techcrunch',
+    'Time': 'time',
+    'New Scientist': 'new-scientist',
+    'NFL News': 'nfl-news',
+    'National Gographic': 'national-geographic',
+    'USA Today': 'usa-today'
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = newsChannels1;
+
 
 
 /***/ }),
@@ -235,7 +240,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "html, body {\r\n  font-size: 10px;\r\n}\r\n\r\n.my-class {\r\n  display: grid;\r\n  grid-template-columns: 2fr 7fr;\r\n  width: 100%;\r\n  margin: 0 auto;\r\n}\r\n\r\n.news__header {\r\n  text-align: center;\r\n  font-size: 4.5rem;\r\n}\r\n\r\n.news__channel-list {\r\n  margin-top: 2px;\r\n}\r\n\r\n.news__channels-header, .news__artclies-header {\r\n  font-size: 1.5rem;\r\n  height: 2rem;\r\n  margin-bottom: 1rem;\r\n  text-align: center;\r\n}\r\n\r\n.news__artclies-header {\r\n  text-align: center;\r\n}\r\n\r\n img {\r\n   width: 100% !important;\r\n   height: auto !important;\r\n }\r\n\r\n section {\r\n   margin: 2px;\r\n }\r\n\r\n.news-articles {\r\n  display: grid;\r\n  grid-template-columns: 1fr 1fr;\r\n}\r\n\r\n.news-channel {\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: center;\r\n  margin-bottom: 1rem;\r\n  vertical-align: middle;\r\n  padding: 1rem 1rem;\r\n  cursor: pointer;\r\n}\r\n\r\n.loader {\r\n  position: relative;\r\n  height: 5rem;\r\n}\r\n\r\n.circle-loader {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 45%;\r\n  border: 6px solid transparent;\r\n  border-top-color: #b8b9ca;\r\n  width: 90px;\r\n  height: 90px;\r\n  box-sizing: border-box;\r\n  border-radius: 50%;\r\n  animation: loader-animation 1s linear infinite;\r\n}\r\n\r\n.active-channel {\r\n  background: #d8d9da;\r\n}\r\n\r\n.loader-icon {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  font-size: 18px;\r\n  color: #d8d9da;\r\n  transform: translate(-50%, -50%);\r\n}\r\n\r\n@keyframes loader-animation {\r\n  0% {\r\n      transform: rotate(0deg);\r\n  }\r\n  100% {\r\n      transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n@media (min-width:650px) {\r\n  html, body {\r\n    font-size: 13px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 96%;\r\n  }\r\n}\r\n\r\n@media (min-width:1025px) {\r\n  html, body {\r\n    font-size: 15px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 90%;\r\n  }\r\n}\r\n\r\n@media (min-width:1281px) {\r\n  html, body {\r\n    font-size: 17px;\r\n  }\r\n\r\n  .my-class {\r\n    width: 65%;\r\n  }\r\n}\r\n", ""]);
+exports.push([module.i, "html, body {\r\n  font-size: 10px;\r\n}\r\n\r\n.news {\r\n  display: grid;\r\n  grid-template-columns: 2fr 7fr;\r\n  width: 100%;\r\n  margin: 0 auto;\r\n}\r\n\r\n.news__header {\r\n  text-align: center;\r\n  font-size: 4.5rem;\r\n}\r\n\r\n.news__channel-list {\r\n  margin-top: 2px;\r\n}\r\n\r\n.news__channels-header, .news__artclies-header {\r\n  font-size: 1.5rem;\r\n  height: 2rem;\r\n  margin-bottom: 1rem;\r\n  text-align: center;\r\n}\r\n\r\n.news__artclies-header {\r\n  text-align: center;\r\n}\r\n\r\n img {\r\n   width: 100% !important;\r\n   height: auto !important;\r\n }\r\n\r\n section {\r\n   margin: 2px;\r\n }\r\n\r\n.news-articles {\r\n  display: grid;\r\n  grid-template-columns: 1fr 1fr;\r\n}\r\n\r\n.news-channel {\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: center;\r\n  margin-bottom: 1rem;\r\n  vertical-align: middle;\r\n  padding: 1rem 1rem;\r\n  cursor: pointer;\r\n}\r\n\r\n.loader {\r\n  position: relative;\r\n  height: 5rem;\r\n}\r\n\r\n.circle-loader {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 45%;\r\n  border: 6px solid transparent;\r\n  border-top-color: #b8b9ca;\r\n  width: 90px;\r\n  height: 90px;\r\n  box-sizing: border-box;\r\n  border-radius: 50%;\r\n  animation: loader-animation 1s linear infinite;\r\n}\r\n\r\n.active-channel {\r\n  background: #d8d9da;\r\n}\r\n\r\n.loader-icon {\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  font-size: 18px;\r\n  color: #d8d9da;\r\n  transform: translate(-50%, -50%);\r\n}\r\n\r\n@keyframes loader-animation {\r\n  0% {\r\n      transform: rotate(0deg);\r\n  }\r\n  100% {\r\n      transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n@media (min-width:320px) {\r\n  html, body {\r\n    font-size: 13px;\r\n  }\r\n\r\n  .news__header {\r\n    font-size: 3rem;\r\n    margin-top: 0.5rem;\r\n  }\r\n\r\n  .news {\r\n    width: 96%;\r\n    grid-template-columns: 1fr 3fr; \r\n  }\r\n\r\n  .news-articles {\r\n    grid-template-columns: 1fr;\r\n  }\r\n\r\n  .news__artclies-header, .news__channels-header {\r\n    height: 2.8rem;\r\n    font-size: 1.2rem;\r\n  }\r\n\r\n  .news__artclies-header {\r\n    padding-top: 0.7rem;\r\n  }\r\n\r\n  .card-text {\r\n    max-height: 150px;\r\n    white-space: nowrap;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\r\n  }\r\n}\r\n\r\n@media (min-width:650px) {\r\n  html, body {\r\n    font-size: 13px;\r\n  }\r\n\r\n  .news {\r\n    width: 96%;\r\n  }\r\n\r\n  .news-articles {\r\n    grid-template-columns: 1fr 1fr;\r\n  }\r\n\r\n  .card-text {\r\n    max-height: 600px;\r\n    white-space: normal;\r\n    overflow: unset;\r\n    text-overflow: ellipsis;\r\n  }\r\n}\r\n\r\n@media (min-width:1025px) {\r\n  html, body {\r\n    font-size: 15px;\r\n  }\r\n\r\n  .news {\r\n    width: 90%;\r\n  }\r\n}\r\n\r\n@media (min-width:1281px) {\r\n  html, body {\r\n    font-size: 17px;\r\n  }\r\n\r\n  .news {\r\n    width: 65%;\r\n  }\r\n}\r\n", ""]);
 
 // exports
 
@@ -828,11 +833,10 @@ module.exports = function (css) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const createNewsChannelItem = (channelId, currentChannel) => {
-  let newsItem = document.createElement('div');
-  newsItem.innerHTML = channelId;
-  newsItem.classList.add('card');
-  newsItem.classList.add('news-channel');
+const createNewsChannelItem = (channelName,channelId, currentChannel) => {
+  let newsItem = document.createElement('li');
+  newsItem.innerHTML = channelName;
+  newsItem.classList.add('card', 'news-channel');
   newsItem.setAttribute('id', channelId);
   if (channelId === currentChannel) {
     newsItem.classList.add('active-channel')
@@ -848,8 +852,9 @@ const createNewsChannelItem = (channelId, currentChannel) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = createArtciles;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fetch_service__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__constants__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_article__ = __webpack_require__(10);
 
 
@@ -857,7 +862,7 @@ const createNewsChannelItem = (channelId, currentChannel) => {
 
 const fetchService = new __WEBPACK_IMPORTED_MODULE_0__fetch_service__["a" /* FetchService */];
 
-const createArtciles = (newsChannelId) => {
+async function createArtciles (newsChannelId) {
   return fetchService.fetchDataFromServer(newsChannelId, __WEBPACK_IMPORTED_MODULE_1__constants__["a" /* apiKey */]).then(data => {
     let arrayOfPromises = [];
     let arrayOfArticles = [];
@@ -872,8 +877,6 @@ const createArtciles = (newsChannelId) => {
     }
   })
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = createArtciles;
-
 
 /***/ }),
 /* 9 */
@@ -886,6 +889,10 @@ class FetchService {
   fetchDataFromServer(newsChannelId, key) {
     return fetch(`https://newsapi.org/v1/articles?source=${newsChannelId}&apiKey=${key}`)
       .then(resp => resp.json())
+      .catch(err => {
+        console.log(err);
+        return [];
+      })
       .then(data => {
         return data.articles || [];
       });
@@ -901,12 +908,19 @@ class FetchService {
 
 "use strict";
 class Article {
-  constructor({description, publishedAt, title, url, urlToImage}) {
+  constructor(
+    {
+      description = 'follow the link to find out more',
+      publishedAt = '',
+      title = '',
+      url = '',
+      urlToImage
+    }) {
     this.description = description || 'follow the link to find out more';
     this.publishedAt = publishedAt || '';
     this.title = title || '';
     this.url = url || '';
-    this.urlToImage = urlToImage;
+    this.urlToImage = urlToImage || '';
     this.component = null;
   }
 
