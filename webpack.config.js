@@ -56,21 +56,3 @@ module.exports = {
         })
     ],
 };
-
-// use: [
-//     {
-//         loader: 'style-loader'
-//     },
-//     {
-//         loader: 'css-loader'
-//     },
-//     {
-//         loader: 'resolve-url-loader'
-//     },
-//     {
-//         loader: 'sass-loader',
-//         options: {
-//             includePaths: ["absolute/path/a", "absolute/path/b"]
-//         }
-//     }
-// ]
