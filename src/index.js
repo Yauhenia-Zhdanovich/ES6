@@ -1,4 +1,4 @@
-import './style.scss';
+// import './style.scss';
 
 const main = () => {
   const uploadButton = document.querySelector('.upload-button');

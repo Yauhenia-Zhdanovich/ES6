@@ -3,8 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
-    devtool: 'source-map',
+module.exports = [{
+    name: 'browser',
     entry: {
         polyfill: 'babel-polyfill',
         index: './src/index.js'
@@ -47,7 +47,7 @@ module.exports = {
     plugins: [
         new ExtractTextPlugin({
             filename: '[name].css',
-            disable: true,
+            disable: false,
           }),
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
@@ -55,7 +55,7 @@ module.exports = {
             template: 'src/index.html'
         })
     ],
-};
+}];
 
 // use: [
 //     {
