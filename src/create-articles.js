@@ -1,11 +1,14 @@
-import { FetchService } from './fetch-service';
+// import { FetchService } from './fetch-service';
 import { apiKey } from './constants';
 import { Article } from './components/article';
-
-const fetchService = new FetchService;
+import { httpService } from './fetch-service';
 
 export async function createArtciles (newsChannelId) {
-  return fetchService.fetchDataFromServer(newsChannelId, apiKey).then(data => {
+  let settings = {
+    newsChannelId,
+    key: apiKey
+  };
+  return httpService('GET', settings).then(data => {
     let arrayOfPromises = [];
     let arrayOfArticles = [];
     data.forEach(element => {
