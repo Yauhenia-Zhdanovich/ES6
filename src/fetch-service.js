@@ -1,19 +1,8 @@
-const handleErrors = (err) => {
-  import('./components/error-pop-up').then(module => {
-    const ErrorPopup = module.ErrorPopup;
-    let popup = new ErrorPopup();
-    popup.showPopup();
-    console.log(err);
-  })
-  return [];
-} 
-
 function fetchData(method, settings) {
   switch (method) {
     case 'GET':
-      return fetch(`https://newsapi.org/v1/articles?source=${settings.newsChannelId}&apiKey=${settings.key}`)
+      return fetch(`dhttps://newsapi.org/v1/articles?source=${settings.newsChannelId}&apiKey=${settings.key}`)
       .then(resp => resp.json())
-      .catch(handleErrors)
       .then(data => {
         return data.articles || [];
       });
@@ -26,14 +15,12 @@ function fetchData(method, settings) {
         body: JSON.stringify(settings.body)
       })
       .then(response => response.json())
-      .catch(handleErrors());
     case 'PUT':
       return fetch('https://newsapi.org/v1/articles', {
         method: 'PUT',
         body: settings.body
       })
       .then(response => response.json())
-      .catch(handleErrors);
     default:
       return false;
   }
