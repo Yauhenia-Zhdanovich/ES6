@@ -1,3 +1,6 @@
+$pink01: #f8d7da;
+$pink02: #f5c6cb;
+
 html,
 body {
     font-size: 10px;
@@ -54,6 +57,22 @@ aside {
 .news-articles {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+.error-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: $pink01;
+    border: 1px solid  $pink02;
+    border-radius: 10px;
+    width: 50%;
+    margin: 0 auto;
+    height: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .news-channel {

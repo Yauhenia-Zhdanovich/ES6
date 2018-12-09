@@ -1,5 +1,5 @@
-import { createArtciles } from './create-articles';
-
+import { store } from './store/store';
+ 
 export const setCssClass = (currentValue, className) => {
   let previousItem = document.querySelector(`.${className}`);
   previousItem.classList.remove(`${className}`);
@@ -26,4 +26,17 @@ export async function contentUploadBootsrapper() {
     body.appendChild(newsContent);
   }
   return await updateDom();
+}
+
+export const handleErrors = (err) => {
+  import('./components/error-pop-up').then(module => {
+    const ErrorPopup = module.ErrorPopup;
+    let popup = new ErrorPopup();
+    popup.showPopup();
+    store.dispatch({
+      type: 'LOAD_ARTICLES_FAIL'
+    })
+    console.log(err);
+  })
+  return [];
 }
