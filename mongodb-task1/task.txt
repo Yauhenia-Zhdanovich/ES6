@@ -1,0 +1,281 @@
+№1
+db.restaurants.find({$and: [
+    {cuisine: "Chinese"},
+    {borough: "Queens"}
+]}).count()
+
+728
+
+№4
+db.restaurants.find({"grades.8.score": {$lt: 7}}, {_id: 0, address: 0, cuisine: 0,borough: 0, grades: 0, restaurant_id: 0})
+
+{
+    "name" : "Silver Krust West Indian Restaurant"
+}
+
+/* 2 */
+{
+    "name" : "Pure Food"
+}
+№5
+db.restaurants.find({$and: [
+ {cuisine: {$eq: "Seafood"}},
+ {"grades.grade": {$eq: 'B'}},
+ {"grades.date": {$gte: ISODate("2014-02-01T00:00:00.000Z"), $lt: ISODate("2014-03-01T00:00:00.000Z")}}]}, {address: 0, cuisine: 0,name: 0, grades: 0, restaurant_id: 0})
+/* 1 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab0f21"),
+    "borough" : "Queens"
+}
+
+/* 2 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab0f27"),
+    "borough" : "Manhattan"
+}
+
+/* 3 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab0f58"),
+    "borough" : "Bronx"
+}
+
+/* 4 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab0fd7"),
+    "borough" : "Bronx"
+}
+
+/* 5 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab104e"),
+    "borough" : "Brooklyn"
+}
+
+/* 6 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab133e"),
+    "borough" : "Manhattan"
+}
+
+/* 7 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab17f1"),
+    "borough" : "Manhattan"
+}
+
+/* 8 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1984"),
+    "borough" : "Manhattan"
+}
+
+/* 9 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1a78"),
+    "borough" : "Manhattan"
+}
+
+/* 10 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1ad0"),
+    "borough" : "Brooklyn"
+}
+
+/* 11 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1dba"),
+    "borough" : "Manhattan"
+}
+
+/* 12 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1e0d"),
+    "borough" : "Manhattan"
+}
+
+/* 13 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1e38"),
+    "borough" : "Queens"
+}
+
+/* 14 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1ea6"),
+    "borough" : "Brooklyn"
+}
+
+/* 15 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab1f14"),
+    "borough" : "Manhattan"
+}
+
+/* 16 */
+{
+    "_id" : ObjectId("5c100a981a0e470711ab2271"),
+    "borough" : "Manhattan"
+}
+
+/* 17 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab26ab"),
+    "borough" : "Queens"
+}
+
+/* 18 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab27ac"),
+    "borough" : "Queens"
+}
+
+/* 19 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab2ce9"),
+    "borough" : "Manhattan"
+}
+
+/* 20 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab2d22"),
+    "borough" : "Manhattan"
+}
+
+/* 21 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab2eaa"),
+    "borough" : "Manhattan"
+}
+
+/* 22 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab2f9c"),
+    "borough" : "Bronx"
+}
+
+/* 23 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab30ed"),
+    "borough" : "Brooklyn"
+}
+
+/* 24 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab325f"),
+    "borough" : "Queens"
+}
+
+/* 25 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab3552"),
+    "borough" : "Bronx"
+}
+
+/* 26 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab3597"),
+    "borough" : "Manhattan"
+}
+
+/* 27 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab381b"),
+    "borough" : "Brooklyn"
+}
+
+/* 28 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab386a"),
+    "borough" : "Queens"
+}
+
+/* 29 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab3a8d"),
+    "borough" : "Staten Island"
+}
+
+/* 30 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab3e0a"),
+    "borough" : "Manhattan"
+}
+
+/* 31 */
+{
+    "_id" : ObjectId("5c100a991a0e470711ab3f40"),
+    "borough" : "Manhattan"
+}
+
+/* 32 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab438b"),
+    "borough" : "Manhattan"
+}
+
+/* 33 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab43c2"),
+    "borough" : "Bronx"
+}
+
+/* 34 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab463b"),
+    "borough" : "Manhattan"
+}
+
+/* 35 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab4687"),
+    "borough" : "Brooklyn"
+}
+
+/* 36 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab47da"),
+    "borough" : "Brooklyn"
+}
+
+/* 37 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab4c3d"),
+    "borough" : "Bronx"
+}
+
+/* 38 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab4c75"),
+    "borough" : "Brooklyn"
+}
+
+/* 39 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab4cd8"),
+    "borough" : "Manhattan"
+}
+
+/* 40 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab50a4"),
+    "borough" : "Manhattan"
+}
+
+/* 41 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab54a2"),
+    "borough" : "Brooklyn"
+}
+
+/* 42 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab5510"),
+    "borough" : "Brooklyn"
+}
+
+/* 43 */
+{
+    "_id" : ObjectId("5c100a9a1a0e470711ab5a07"),
+    "borough" : "Manhattan"
+}
