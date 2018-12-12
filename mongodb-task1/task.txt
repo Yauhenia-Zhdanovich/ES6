@@ -6,6 +6,14 @@ db.restaurants.find({$and: [
 
 728
 
+№2
+db.restaurants.find().sort({"grades.score": -1}).limit(1)
+    "_id" : ObjectId("5c0f6e10ce4e9a7eb46ab051"),
+
+№3
+db.restaurants.updateMany({borough: "Manhattan"}, {$set : {"grades.0" : { grade: "A", score: 7, date: ISODate() } } })
+
+
 №4
 db.restaurants.find({"grades.8.score": {$lt: 7}}, {_id: 0, address: 0, cuisine: 0,borough: 0, grades: 0, restaurant_id: 0})
 
