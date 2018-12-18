@@ -166,3 +166,73 @@ result:
     "_id" : "VistaJet Limited",
     "total" : 183
 }
+
+№5
+query
+db.airlines.aggregate([
+  { $match: { originCountry: "United States"}},
+  { $group : {
+    _id: {
+      state: "$originState",
+      city: "$originCity"
+     },
+     totalPassengers: { $sum: "$passengers"}
+  }},
+  { $sort: {totalPassengers : -1} },
+  { $limit: 5 },
+  { $sort: {"_id.state": 1} },
+  { $project: {
+      _id: 0,
+      totalPassengers: "$totalPassengers",
+      location: {
+      state: "$_id.state",
+      city: "$_id.city"  
+    }
+  }}
+])
+
+result:
+/* 1 */
+{
+    "totalPassengers" : 23701556,
+    "location" : {
+        "state" : "California",
+        "city" : "Los Angeles, CA"
+    }
+}
+
+/* 2 */
+{
+    "totalPassengers" : 29416565,
+    "location" : {
+        "state" : "Georgia",
+        "city" : "Atlanta, GA"
+    }
+}
+
+/* 3 */
+{
+    "totalPassengers" : 28035755,
+    "location" : {
+        "state" : "Illinois",
+        "city" : "Chicago, IL"
+    }
+}
+
+/* 4 */
+{
+    "totalPassengers" : 25266639,
+    "location" : {
+        "state" : "New York",
+        "city" : "New York, NY"
+    }
+}
+
+/* 5 */
+{
+    "totalPassengers" : 18408792,
+    "location" : {
+        "state" : "Texas",
+        "city" : "Dallas/Fort Worth, TX"
+    }
+}
