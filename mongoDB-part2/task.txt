@@ -1,0 +1,168 @@
+№1
+query:
+db.airlines.aggregate([
+  {
+    $group: {
+      _id: "$class",
+      amount: {$sum: 1}
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      class: "$_id",
+      total: "$amount"
+    }    
+  }
+])
+
+result:
+/* 1 */
+{
+    "class" : "F",
+    "total" : 140343.0
+}
+
+/* 2 */
+{
+    "class" : "L",
+    "total" : 23123.0
+}
+
+/* 3 */
+{
+    "class" : "P",
+    "total" : 5683.0
+}
+
+/* 4 */
+{
+    "class" : "G",
+    "total" : 17499.0
+}
+
+
+№2
+query:
+db.airlines.aggregate([
+  { $match: { destCountry: {$not: {$eq: "United States" } } } },
+  {
+      $group: {
+        _id: "$destCity",
+        avgPassengers: { $avg: "$passengers"}
+      }
+   },
+   { $project: { _id: 0, avgPassengers: "$avgPassengers", city: "$_id" } },
+   { $sort: { avgPassengers: -1 } },
+   { $limit: 3 }
+])
+
+result:
+/* 1 */
+{
+    "avgPassengers" : 8052.38095238095,
+    "city" : "Abu Dhabi, United Arab Emirates"
+}
+
+/* 2 */
+{
+    "avgPassengers" : 7176.59663865546,
+    "city" : "Dubai, United Arab Emirates"
+}
+
+/* 3 */
+{
+    "avgPassengers" : 7103.33333333333,
+    "city" : "Guangzhou, China"
+}
+
+№3
+query
+db.airlines.aggregate([
+  { $match: { destCountry: "Latvia" } },
+  {
+    $group: {
+      _id: "$destCountry",
+      carriers: {
+         $addToSet: "$carrier"
+      }
+    }
+  }
+])
+
+result
+/* 1 */
+{
+    "_id" : "Latvia",
+    "carriers" : [ 
+        "Uzbekistan Airways", 
+        "Blue Jet SP Z o o", 
+        "JetClub AG"
+    ]
+}
+
+№4
+query
+db.airlines.aggregate([
+ { $match: {
+    originCountry : "United States",
+    $or: [
+      {destCountry: "Greece"},
+      {destCountry: "Italy"},
+      {destCountry: "Spain"}
+    ]
+  }
+ },
+ {
+    $group: {
+      _id: "$carrier",
+      total: {$sum: "$passengers"}
+    }
+  },
+  { $sort : {total: -1}},
+  { $limit: 10},
+  { $skip: 3}
+])
+
+result:
+/* 1 */
+{
+    "_id" : "Compagnia Aerea Italiana",
+    "total" : 280256
+}
+
+/* 2 */
+{
+    "_id" : "United Air Lines Inc.",
+    "total" : 229936
+}
+
+/* 3 */
+{
+    "_id" : "Emirates",
+    "total" : 100903
+}
+
+/* 4 */
+{
+    "_id" : "Air Europa",
+    "total" : 94968
+}
+
+/* 5 */
+{
+    "_id" : "Meridiana S.p.A",
+    "total" : 20308
+}
+
+/* 6 */
+{
+    "_id" : "Norwegian Air Shuttle ASA",
+    "total" : 13344
+}
+
+/* 7 */
+{
+    "_id" : "VistaJet Limited",
+    "total" : 183
+}
